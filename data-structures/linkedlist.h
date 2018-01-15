@@ -18,6 +18,7 @@ int pop(node* n);
 void push(node* n, int num);
 void display(node* n);
 
+
 node* createnode(int init) {
     node* n = malloc(nodesize);
     n->h = init;
@@ -25,8 +26,12 @@ node* createnode(int init) {
     n->size = 1;
     return n;
 }
-
 void push(node* n, int num) {
+    if (n->size == 0) {
+        n->h = num;
+        n->next = NULL;
+        n->size = 1;
+    }
     node* copy = n;
     while (copy->next != NULL) {
         copy = copy->next;
@@ -36,11 +41,22 @@ void push(node* n, int num) {
     copy->next = newnode;
     n->size += 1;
 }
-
+node* push_before_head(node *n, int num) {
+    if (n->size == 0) {
+        n->h = num;
+        n->next = NULL;
+        n->size = 1;
+        return n;
+    }
+    node* new_ = createnode(num);
+    new_->next = n;
+    new_->size = n->size + 1;
+    return new_;
+}
 int pop(node* n) {
     if (n->size == 0) {
-        printf("ERROR: Empty Node, returning -100 Error Code\n");
-        return -100;
+        printf("ERROR: Empty Node, returning NULL\n");
+        return NULL;
     }
     if (n->size == 1) {
         int ret = n->h;
@@ -61,6 +77,28 @@ int pop(node* n) {
     int ret = copy->next->h;
     copy->next = NULL;
     return ret;
+}
+
+node* reverse(node* n) {
+    node *copy = n;
+    int size = n->size;
+
+    if (size == 0 || size == 1) { return NULL; }
+
+    node* new_ = createnode(n->h);
+    copy = n->next;
+    n = NULL;
+    while(copy->next) {
+        new_ = push_before_head(new_, copy->h);
+        node* current = copy;
+        copy = copy->next;
+        current = NULL;
+    }
+    new_ = push_before_head(new_, copy->h);
+    node* current = copy;
+    copy = copy->next;
+    current = NULL;
+    return new_;
 }
 
 void display(node* n) {
