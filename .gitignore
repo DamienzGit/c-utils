@@ -2,4 +2,4 @@
 *.xml
 *.txt
 *.out
-.idea/*
+cmake-build-debug/
