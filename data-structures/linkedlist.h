@@ -13,18 +13,12 @@ typedef struct node {
 
 const int nodesize = sizeof(node);
 
-// #################################################
-// methods declarations
-node* createnode(int init);
-int pop(node* n);
-void push(node* n, int num);
-void display(node* n);
-node* reverse(node* n);
-node* push_before_head(node *n, int num);
-int remove_node(node* n, int num);
-// #################################################
 
-
+void swap(node** a, node** b) {
+    node* temp = *a;
+    *a = *b;
+    *b = temp;
+}
 node* createnode(int init) {
     node* n = malloc(nodesize);
     n->h = init;
@@ -47,17 +41,17 @@ void push(node* n, int num) {
     copy->next = newnode;
     n->size += 1;
 }
-node* push_before_head(node *n, int num) {
+void prepend(node* n, int num) {
     if (n->size == 0) {
         n->h = num;
         n->next = NULL;
         n->size = 1;
-        return n;
+        return;
     }
     node* new_ = createnode(num);
     new_->next = n;
     new_->size = n->size + 1;
-    return new_;
+    swap(&n, &new_);
 }
 int pop(node* n) {
     if (n->size == 0) {
@@ -94,13 +88,13 @@ node* reverse(node* n) {
     copy = n->next;
     n = NULL;
     while(copy->next) {
-        new_ = push_before_head(new_, copy->h);
+        prepend(new_, copy->h);
         node* current = copy;
         copy = copy->next;
         current = NULL;
         free(current);
     }
-    new_ = push_before_head(new_, copy->h);
+    prepend(new_, copy->h);
     node* current = copy;
     copy = copy->next;
     current = NULL;
