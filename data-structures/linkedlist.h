@@ -41,17 +41,13 @@ void push(node* n, int num) {
     copy->next = newnode;
     n->size += 1;
 }
-void prepend(node* n, int num) {
-    if (n->size == 0) {
-        n->h = num;
-        n->next = NULL;
-        n->size = 1;
-        return;
-    }
+void prepend(node** n, int num) {
     node* new_ = createnode(num);
-    new_->next = n;
-    new_->size = n->size + 1;
-    swap(&n, &new_);
+    if( *n != NULL ) {
+        new_->size = (*n)->size + 1;
+        new_->next = *n;
+        swap(n, &new_);
+    }
 }
 int pop(node* n) {
     if (n->size == 0) {
